@@ -37,16 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 /* function load() {
-    google.script.url.getLocation(function (location) {
-        nodo = location.parameter.nodo
-        const inputNodo = document.getElementById('nodo')
-        inputNodo.value = nodo
-        google.script.run
-            .withSuccessHandler(renderProductos).getData(nodo);
-    })
-} */
-
-function load() {
     console.log("Simulando carga de datos...");
 
     const simulatedResponse = {
@@ -84,7 +74,7 @@ function load() {
     };
 
     renderProductos(JSON.stringify(simulatedResponse));
-}
+} */
 
 
 function renderProductos(data) {
@@ -288,7 +278,7 @@ function switchBtn(status) {
     }
 } */
 
-function send(form, event) {
+/* function send(form, event) {
     console.log("Simulando envío de datos...");
     event.preventDefault()
 
@@ -309,7 +299,46 @@ function send(form, event) {
     setTimeout(() => {
         successHandler({ status: "success", msg: "Datos enviados correctamente." });
     }, 1000); // Simula un pequeño retraso
+} */
+
+const API_URL = "https://script.googleapis.com/v1/scripts/AKfycbzXQYRV23HzDe_XCPO0_H6k9BHyvxDcA819XxncBA5aF0vEbJEKWSPbgxzSfxO6-EMN:run"; // Reemplaza con la URL del script publicado
+
+function load() {
+    const nodo = new URLSearchParams(window.location.search).get('nodo');
+
+    fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "getData", nodo })
+    })
+        .then(response => response.json())
+        .then(renderProductos)
+        .catch(error => console.error("Error al cargar datos:", error));
 }
+
+function send(form) {
+    const data = Array.from(new FormData(form).entries()).reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {});
+    const checkedInputs = document.querySelectorAll('.check-productos:checked');
+
+    const records = Array.from(checkedInputs).map(input => {
+        const qty = document.getElementById(`qty${input.id}`);
+        return { ...data, producto: input.value, cantidad: qty.value };
+    });
+
+    if (records.length > 0) {
+        fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "newRecord", records, nodo: data.nodo })
+        })
+            .then(response => response.json())
+            .then(successHandler)
+            .catch(error => console.error("Error al enviar datos:", error));
+    } else {
+        alert("Selecciona al menos un producto.");
+    }
+}
+
 
 
 function showAlert(text, color) {
