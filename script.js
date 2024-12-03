@@ -308,8 +308,10 @@ function load() {
 
     fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "getData", nodo })
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ action: "getData", nodo, key: "AIzaSyBg-B5gHEI7bEmKIyWrHaSw0KYGlvaJPxI" })
     })
         .then(response => response.json())
         .then(renderProductos)
