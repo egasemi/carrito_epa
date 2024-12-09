@@ -1,0 +1,55 @@
+/* Estilos para evitar doble scroll y agregar footer */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* background-color: #0D6B49; */
+}
+
+header {
+  /* background-color: #FDE5CC; */
+  text-align: center;
+  padding: 10px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* header img {
+  width: 30%; 
+  float: left;
+}
+ */
+#cont {
+  flex: 1; /* Permite que el contenedor del iframe ocupe todo el espacio disponible */
+  position: relative;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  /* background-color: #0D6B49; */
+}
+
+footer {
+  background-color: #FDE5CC;
+  text-align: center;
+  padding: 10px 0;
+  border-top: 1px solid #ddd;
+  display: none; /* Oculto hasta que se cargue el iframe */
+}
+
+footer img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+footer p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+  display: inline-block;
+  vertical-align: middle;
+}
