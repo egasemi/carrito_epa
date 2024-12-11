@@ -92,11 +92,19 @@ function renderProductos(data) {
             })
 
             var formatQty = ''
+            var fotoDiv = ''
 
             if (producto.disponibles < producto.limite) {
                 formatQty = `<option value="1">1</option>${Array.from({ length: producto.disponibles - 1 }, (_, i) => `<option value="${i + 2}">${i + 2}</option>`).join('')}`
             } else {
                 formatQty = `<option value="1">1</option>${Array.from({ length: producto.limite - 1 }, (_, i) => `<option value="${i + 2}">${i + 2}</option>`).join('')}`
+            }
+
+            if (producto.foto) {
+                fotoDiv = `
+                <div class="col-12 col-md-6">
+                    <img src="${producto.foto}" alt="${producto.titulo}" class="img-fluid mb-2 product-image">
+                </div>`
             }
             productoDiv.innerHTML = `
           <div class="form-check fs-3">
@@ -110,9 +118,7 @@ function renderProductos(data) {
             ${producto.disponibles < 1 ? '<span class="form-text text-danger" id="sin-stock">Sin stock</span>' : ''}
           </div>
           <div class="row">
-            <div class="${producto.foto ? 'col-12 col-md-6' : 'd-none'}">
-              <img src="${producto.foto}" alt="${producto.titulo}" class="img-fluid mb-2 product-image">
-            </div>
+            ${fotoDiv}
             <div class="col-12 col-md-6">
               <ul id="descripcion-${grupoId}">${descripcionList}</ul>
             </div>
