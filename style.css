@@ -41,9 +41,8 @@ footer {
   display: none; /* Oculto hasta que se cargue el iframe */
 }
 
-footer img {
-  height: 40px;
-  margin-right: 10px;
+.img-fluid {
+  border-radius: 5px
 }
 
 footer p {
