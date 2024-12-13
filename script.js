@@ -21,8 +21,20 @@ document.getElementById('celular').addEventListener('input', function (event) {
 });
 
 function ajustarAltura() {
+    const body = document.body;
+    const html = document.documentElement;
+
+    // Calcular la altura total incluyendo márgenes
+    const alturaTotal = Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        html.clientHeight,
+        html.scrollHeight,
+        html.offsetHeight
+    );
+
     const altura = document.body.scrollHeight; // Altura del contenido
-    parent.postMessage({ tipo: "ajustarAltura", altura }, "*");
+    parent.postMessage({ tipo: "ajustarAltura", alturaTotal }, "*");
 }
 
 // Llama a ajustarAltura después de que el contenido esté listo
