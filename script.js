@@ -20,6 +20,13 @@ document.getElementById('celular').addEventListener('input', function (event) {
     this.value = this.value.replace(/[^0-9]/g, '');
 });
 
+function ajustarAltura() {
+    const altura = document.body.scrollHeight; // Altura del contenido
+    parent.postMessage({ tipo: "ajustarAltura", altura }, "*");
+}
+
+// Llama a ajustarAltura después de que el contenido esté listo
+
 var nodo = ''
 const pedidoElem = document.getElementById('pedido');
 const spinner = document.getElementById('spinner');
@@ -35,7 +42,10 @@ function load() {
     updateTotal()
     fetch("https://script.google.com/macros/s/AKfycbyWidO-mbdC060FypfS1KOMT6-pG9KBpDZb4pNQbaWLQekOrkCbyxAnDYL2tfZm0i67/exec")
         .then(response => response.json())
-        .then(res => renderProductos(res.data))
+        .then(res => {
+            renderProductos(res.data)
+            ajustarAltura()
+        })
 }
 
 load()
