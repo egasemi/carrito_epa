@@ -162,12 +162,6 @@ function renderProductos(data) {
                 formatQty = `<option value="1">1</option>${Array.from({ length: producto.limite - 1 }, (_, i) => `<option value="${i + 2}">${i + 2}</option>`).join('')}`
             }
 
-            if (producto.foto) {
-                fotoDiv = `
-                <div class="col-12 col-md-6">
-                    <img src="${producto.foto}" alt="${producto.titulo}" class="img-fluid mb-2 product-image">
-                </div>`
-            }
             productoDiv.innerHTML = `
           <div class="form-check fs-3">
             <input type="checkbox" data-grupo-checkbox="${grupoId}" class="form-check-input check-productos" id="${producto.id}" value="producto${producto.id}" aria-describedby="sin-stock" ${producto.disponibles < 1 ? 'disabled' : ''}>
@@ -179,7 +173,10 @@ function renderProductos(data) {
             ${producto.disponibles < 1 ? '<span class="form-text text-danger" id="sin-stock">Sin stock</span>' : ''}
           </div>
           <div class="row mt-3">
-            ${fotoDiv}
+            <img src="/img/fotos_productos/${producto.id_titulo}.webp" 
+                alt="${producto.titulo}" 
+                class="img-fluid rounded-3"
+                onerror="this.style.display='none';">
             <div class="col-12 col-md-6">
               <ul id="descripcion-${grupoId}">${descripcionList}</ul>
             </div>

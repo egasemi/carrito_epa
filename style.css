@@ -42,7 +42,7 @@ footer {
 }
 
 .img-fluid {
-  border-radius: 5px
+  max-width: 340px;
 }
 
 footer p {
