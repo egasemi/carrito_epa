@@ -20,6 +20,42 @@ document.getElementById('celular').addEventListener('input', function (event) {
     this.value = this.value.replace(/[^0-9]/g, '');
 });
 
+function esperarImagenes() {
+    const images = document.querySelectorAll("img");
+    const totalImágenes = images.length;
+
+    if (totalImágenes === 0) {
+        ajustarAltura(); // Si no hay imágenes, ajusta la altura inmediatamente
+        return;
+    }
+
+    let cargadas = 0;
+
+    images.forEach(img => {
+        if (img.complete) {
+            cargadas++; // Imagen ya está cargada
+        } else {
+            img.addEventListener("load", () => {
+                cargadas++;
+                if (cargadas === totalImágenes) {
+                    ajustarAltura(); // Todas las imágenes han cargado
+                }
+            });
+            img.addEventListener("error", () => {
+                cargadas++; // Contar las imágenes que fallan al cargar
+                if (cargadas === totalImágenes) {
+                    ajustarAltura(); // Ajustar altura incluso si alguna imagen falló
+                }
+            });
+        }
+    });
+
+    // Si todas las imágenes están cargadas al iniciar
+    if (cargadas === totalImágenes) {
+        ajustarAltura();
+    }
+}
+
 function ajustarAltura() {
     const body = document.body;
     const html = document.documentElement;
@@ -59,6 +95,7 @@ function load() {
         .then(response => response.json())
         .then(res => {
             renderProductos(res.data)
+            esperarImagenes()
             ajustarAltura()
         })
 }
