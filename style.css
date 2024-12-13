@@ -41,8 +41,16 @@ footer {
   display: none; /* Oculto hasta que se cargue el iframe */
 }
 
-.img-fluid {
-  max-width: 340px;
+.img-container {
+  aspect-ratio: 16 / 9; /* Relación de aspecto fija */
+  overflow: hidden; /* Oculta cualquier contenido extra */
+  max-width: 360px;
+}
+
+.img-container img {
+  width: 100%; /* Escala la imagen */
+  height: 100%; /* Rellena el contenedor */
+  object-fit: cover; /* Mantiene la proporción */
 }
 
 footer p {

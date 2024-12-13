@@ -85,7 +85,7 @@ const btnSubmit = document.getElementById('btnSubmit');
 const btnText = document.getElementById('btnText');
 const no_ciclos = document.getElementById('no-ciclos');
 const retiroElement = document.getElementById('retiro');
-var carrito = {}
+var grupos = {}
 var total = 0
 const variantProductos = []
 
@@ -108,7 +108,7 @@ function renderProductos(data) {
         const productosDiv = document.getElementById('productos');
         productosDiv.replaceChildren()
 
-        const grupos = {}; // Objeto para agrupar variantes por su grupo
+        grupos = {}; // Objeto para agrupar variantes por su grupo
 
         productos.forEach(producto => {
             if (!grupos[producto.id_titulo]) {
@@ -119,24 +119,33 @@ function renderProductos(data) {
 
         Object.keys(grupos).forEach(grupoId => {
             const variantes = grupos[grupoId];
-            const producto = variantes.find(variant => variant.selected) || variantes[0];
             const productoDiv = document.createElement('div');
             productoDiv.classList.add('producto', 'card', 'p-3', 'mb-2');
             productoDiv.id = grupoId
+
+            const variantesDisponibles = variantes.filter(variant => variant.disponibles > 0);
+
+            const producto = variantesDisponibles.find(variant => variant.selected) || variantesDisponibles[0];
+
+            if (variantesDisponibles.length === 0) {
+                return; // Salta al siguiente grupoId
+            }
 
             // Crear lista de opciones para las variantes
 
             let variantesSelect = ''
 
-            if (variantes.length > 1) {
-                const variantesOptions = variantes.map(variant => `
-          <option value="${variant.id}" 
-                  ${variant.selected ? 'selected' : ''}
-                  data-precio="${variant.precio}" 
-                  data-descripcion="${variant.descripcion}">
-              ${variant.variante || 'Variante'}
-            </option>
-          `).join('')
+            if (variantesDisponibles.length > 1) {
+                const variantesOptions = variantesDisponibles.map(variant => `
+                <option value="${variant.id}" 
+                        ${variant.selected ? 'selected' : ''}
+                        data-precio="${variant.precio}"
+                        data-disponibles="${variant.disponibles}"
+                        data-limite="${variant.limite}"
+                        data-descripcion="${variant.descripcion}">
+                    ${variant.variante || 'Variante'}
+                    </option>
+                `).join('')
                 variantesSelect = `
             <div class="col">
               <div class="form-floating">
@@ -173,15 +182,17 @@ function renderProductos(data) {
             ${producto.disponibles < 1 ? '<span class="form-text text-danger" id="sin-stock">Sin stock</span>' : ''}
           </div>
           <div class="row mt-3">
-            <img src="/img/fotos_productos/${producto.id_titulo}.webp" 
-                alt="${producto.titulo}" 
-                class="img-fluid rounded-3 mb-3"
-                onerror="this.style.display='none';">
+            <div class=img-container>
+                <img src="/img/fotos_productos/${producto.id_titulo}.webp" 
+                    alt="${producto.titulo}" 
+                    class="img-fluid rounded-3"
+                    onerror="this.parentNode.style.display='none';">
+                </div>
             <div class="col-12 col-md-6">
               <ul id="descripcion-${grupoId}">${descripcionList}</ul>
             </div>
           </div>
-          <div class="row">
+          <div class="row mt-3">
             <div class="col">
               <div class="form-floating">
               <select class="form-select select-prod" id="qty${producto.id}" aria-describedby="info-sin-stock" ${producto.disponibles < 1 ? 'disabled' : ''} data-precio=${producto.precio} data-grupo-qty="${grupoId}">
@@ -340,6 +351,15 @@ function renderProductos(data) {
             targetQty.name = `qty${selectedOption.value}`
             document.getElementById(`precio-${grupoId}`).innerText = `$${selectedOption.dataset.precio}`;
             document.getElementById(`descripcion-${grupoId}`).innerHTML = descripcionList;
+            var formatQty = ''
+            var disponibles = parseInt(selectedOption.dataset.disponibles)
+            var limite = parseInt(selectedOption.dataset.limite)
+            if (disponibles < limite) {
+                formatQty = `<option value="1">1</option>${Array.from({ length: disponibles - 1 }, (_, i) => `<option value="${i + 2}">${i + 2}</option>`).join('')}`
+            } else {
+                formatQty = `<option value="1">1</option>${Array.from({ length: limite - 1 }, (_, i) => `<option value="${i + 2}">${i + 2}</option>`).join('')}`
+            }
+            targetQty.innerHTML = `<option value=""></option>${formatQty}`
             updateTotal()
         });
     });
