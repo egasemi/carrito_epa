@@ -166,7 +166,7 @@ function renderProductos(data) {
           <div class="form-check fs-3">
             <input type="checkbox" data-grupo-checkbox="${grupoId}" class="form-check-input check-productos" id="${producto.id}" value="producto${producto.id}" aria-describedby="sin-stock" ${producto.disponibles < 1 ? 'disabled' : ''}>
             <label class="form-check-label" for="${producto.id}">
-              <h2 id="titulo-${grupoId}" class="col-auto">${producto.titulo}
+              <h2 id="titulo-${grupoId}" class="col-auto" data-titulo="${producto.titulo}">${producto.titulo}
                 <span class="badge text-bg-success col-auto fs-4" id="precio-${grupoId}">$${producto.precio}</span>
             </h2>
             </label>
@@ -175,7 +175,7 @@ function renderProductos(data) {
           <div class="row mt-3">
             <img src="/img/fotos_productos/${producto.id_titulo}.webp" 
                 alt="${producto.titulo}" 
-                class="img-fluid rounded-3"
+                class="img-fluid rounded-3 mb-3"
                 onerror="this.style.display='none';">
             <div class="col-12 col-md-6">
               <ul id="descripcion-${grupoId}">${descripcionList}</ul>
@@ -419,7 +419,7 @@ function send(form) {
 
         checked_inputs.forEach(input => {
             var qty = document.getElementById("qty" + input.id)
-            const nombre = document.getElementById(`titulo-${input.dataset.grupoCheckbox}`).innerHTML
+            const nombre = document.getElementById(`titulo-${input.dataset.grupoCheckbox}`).dataset.titulo
             var subtotal = parseInt(qty.dataset.precio) * parseInt(qty.value)
             data.pedido.push({ producto: input.value, cantidad: qty.value, subtotal, nombre })
             data.total += subtotal
