@@ -37,6 +37,9 @@ function ajustarAltura() {
     parent.postMessage({ tipo: "ajustarAltura", altura: alturaTotal }, "*");
 }
 
+
+window.addEventListener("resize", ajustarAltura);
+
 // Llama a ajustarAltura después de que el contenido esté listo
 
 var nodo = ''
