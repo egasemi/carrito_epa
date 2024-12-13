@@ -33,8 +33,8 @@ function ajustarAltura() {
         html.offsetHeight
     );
 
-    const altura = document.body.scrollHeight; // Altura del contenido
-    parent.postMessage({ tipo: "ajustarAltura", alturaTotal }, "*");
+    // Enviar la altura ajustada al iframe padre
+    parent.postMessage({ tipo: "ajustarAltura", altura: alturaTotal }, "*");
 }
 
 // Llama a ajustarAltura después de que el contenido esté listo
