@@ -411,6 +411,18 @@ function successHandler(res) {
     load()
 }
 
+function showAlert(text, color) {
+    var alert = document.getElementById("alert")
+    alert.classList.add("alert", "position-fixed", "top-50", "start-50", "translate-middle", "z-3", "alert-" + color)
+    alert.innerHTML = text;
+    alert.classList.remove('d-none')
+    alert.focus()
+    setTimeout(() => {
+        alert.classList.add('d-none');
+    }, 4000);
+}
+
+
 function send(form) {
     switchBtn("loading")
     if (form.checkValidity()) {
