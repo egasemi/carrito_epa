@@ -108,6 +108,8 @@ function renderProductos(data) {
         const productosDiv = document.getElementById('productos');
         productosDiv.replaceChildren()
 
+        productos.sort((a, b) => a.orden - b.orden)
+
         grupos = {}; // Objeto para agrupar variantes por su grupo
 
         productos.forEach(producto => {
@@ -181,8 +183,8 @@ function renderProductos(data) {
             </label>
             ${producto.disponibles < 1 ? '<span class="form-text text-danger" id="sin-stock">Sin stock</span>' : ''}
           </div>
-          <div class="row mt-3">
-            <div class=img-container>
+          <div class="row">
+            <div class="img-container mb-3">
                 <img src="/img/fotos_productos/${producto.id_titulo}.webp" 
                     alt="${producto.titulo}" 
                     class="img-fluid rounded-3"
