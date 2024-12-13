@@ -121,7 +121,7 @@ function renderProductos(data) {
             const variantes = grupos[grupoId];
             const producto = variantes.find(variant => variant.selected) || variantes[0];
             const productoDiv = document.createElement('div');
-            productoDiv.classList.add('producto', 'card', 'p-2', 'mb-2');
+            productoDiv.classList.add('producto', 'card', 'p-3', 'mb-2');
             productoDiv.id = grupoId
 
             // Crear lista de opciones para las variantes
@@ -172,14 +172,13 @@ function renderProductos(data) {
           <div class="form-check fs-3">
             <input type="checkbox" data-grupo-checkbox="${grupoId}" class="form-check-input check-productos" id="${producto.id}" value="producto${producto.id}" aria-describedby="sin-stock" ${producto.disponibles < 1 ? 'disabled' : ''}>
             <label class="form-check-label" for="${producto.id}">
-            <div class="row">
-              <h2 id="titulo-${grupoId}" class="col-auto">${producto.titulo}</h2>
-              <span class="badge text-bg-success col-auto" id="precio-${grupoId}">$${producto.precio}</span>
-            </div>
+              <h2 id="titulo-${grupoId}" class="col-auto">${producto.titulo}
+                <span class="badge text-bg-success col-auto fs-4" id="precio-${grupoId}">$${producto.precio}</span>
+            </h2>
             </label>
             ${producto.disponibles < 1 ? '<span class="form-text text-danger" id="sin-stock">Sin stock</span>' : ''}
           </div>
-          <div class="row">
+          <div class="row mt-3">
             ${fotoDiv}
             <div class="col-12 col-md-6">
               <ul id="descripcion-${grupoId}">${descripcionList}</ul>
