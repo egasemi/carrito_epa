@@ -87,6 +87,8 @@ const no_ciclos = document.getElementById('no-ciclos');
 const retiroElement = document.getElementById('retiro');
 var grupos = {}
 var total = 0
+var pedido = []
+
 const variantProductos = []
 
 function load() {
@@ -268,6 +270,7 @@ function renderProductos(data) {
         for (const checkbox of checkboxes) {
             checkbox.addEventListener('change', () => {
                 sincronizarProducto(checkbox.id);
+                updateCart()
             });
         }
 
@@ -284,6 +287,7 @@ function renderProductos(data) {
                     checkbox.checked = true; // Marcar el checkbox si se selecciona una cantidad
                 }
                 updateTotal()
+                updateCart()
             });
         }
 
@@ -325,6 +329,7 @@ function renderProductos(data) {
             targetQty.innerHTML = `<option value=""></option>${formatQty}`
             updateTotal()
             sincronizarProducto(selectedOption.value)
+            updateCart()
         });
     });
 
@@ -372,18 +377,18 @@ function splitDates(dates) {
 function switchBtn(status) {
     if (status === "loading") {
         btnSubmit.setAttribute("disabled", true)
-        btnText.innerHTML = "Cargando..."
+        btnText.innerHTML = "Confirmando..."
         btnSpinner.style.display = ""
     } else if (status === "active") {
         btnSubmit.removeAttribute("disabled")
-        btnText.innerHTML = "Enviar"
+        btnText.innerHTML = "Confirmar pedido"
         btnSpinner.style.display = "none"
     }
 }
 
 function updateTotal() {
     const checkboxes = document.querySelectorAll('.check-productos:checked');
-    let total = 0;
+    total = 0;
 
     checkboxes.forEach(checkbox => {
         const productoId = checkbox.id;
@@ -393,16 +398,14 @@ function updateTotal() {
 
         total += cantidad * precio; // Suma el costo total de los productos seleccionados
     });
-
-    // Actualiza el total en el HTML
-    const totalElement = document.getElementById('total');
-    totalElement.textContent = `Total: $${total.toFixed(2)}`; // Formateado a dos decimales
 }
 
 function successHandler(res) {
     if (res.status === "success") {
         pedidoElem.style.display = 'none'
         spinner.classList.remove('d-none')
+        total = 0
+        pedido = []
         showAlert(res.msg, res.status)
     } else if (res.status === "danger") {
         showAlert(res.msg, res.status)
@@ -489,6 +492,34 @@ function send(form) {
         form.classList.remove("was-validated")
     } else {
         switchBtn("active")
+    }
+}
+
+function updateCart() {
+    pedido = []
+    var checked_inputs = document.querySelectorAll('.check-productos:checked')
+    const carrito = document.getElementById('carrito')
+
+    checked_inputs.forEach(input => {
+        var qty = document.getElementById("qty" + input.id)
+        const nombre = document.getElementById(`titulo-${input.dataset.grupoCheckbox}`).dataset.titulo
+        var subtotal = parseInt(qty.dataset.precio) * parseInt(qty.value)
+        pedido.push({ producto: input.value, cantidad: qty.value, subtotal, nombre })
+    })
+    if (pedido.length > 0) {
+        carrito.classList.remove("d-none")
+        const pedidoText = pedido.map(item => `<li class="list-group-item">${item.cantidad} - ${item.nombre} : $${item.subtotal.toFixed(2)}`)
+        carrito.innerHTML = `<div class="card-body">
+            <h4>Tu pedido:</h4>
+            <ul class="list-group list-group-flush">
+                ${pedidoText}
+                <li class="list-group-item">
+                <h4 id="total" class="text-success">Total: $${total.toFixed(2)}</h4>
+                </li>
+            </ul></div>`
+    } else {
+        carrito.classList.add('d-none')
+        carrito.innerHTML = ""
     }
 }
 
