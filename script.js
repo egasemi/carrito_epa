@@ -261,46 +261,6 @@ function renderProductos(data) {
             retiroElement.style.display = ''
         }
 
-
-
-        function splitDates(dates) {
-            const dateOptions = {
-                weekday: "long",
-                day: "2-digit",
-                month: "long"
-            }
-
-            const timeOptions = {
-                timeStyle: "short",
-                hour12: true
-            }
-            return {
-                inicio: {
-                    hora: new Intl.DateTimeFormat("es", timeOptions).format(new Date(dates.entrega)),
-                    fecha: new Intl.DateTimeFormat("es", dateOptions).format(new Date(dates.entrega))
-                },
-                fin: {
-                    hora: new Intl.DateTimeFormat("es", timeOptions).format(new Date(dates.fin_entrega)),
-                    fecha: new Intl.DateTimeFormat("es", dateOptions).format(new Date(dates.fin_entrega))
-                }
-            }
-        }
-
-
-        function sincronizarProducto(productoId) {
-            const checkbox = document.getElementById(productoId);
-            const cantidadSelect = document.getElementById(`qty${productoId}`);
-
-            // Si se marca el checkbox, seleccionar "1 caja" en el desplegable
-            if (checkbox.checked) {
-                cantidadSelect.value = 1;
-            } else {
-                // Si se desmarca el checkbox, deseleccionar el desplegable
-                cantidadSelect.value = "";
-            }
-            updateTotal()
-        }
-
         // Agregar eventos de cambio a los checkbox
         const productosElement = document.getElementById('productos');
         const checkboxes = productosElement.querySelectorAll('.form-check-input');
@@ -348,6 +308,7 @@ function renderProductos(data) {
             targetCheckbox.id = selectedOption.value
             targetCheckbox.value = `producto${selectedOption.value}`
             targetCheckbox.name = `producto${selectedOption.value}`
+            targetCheckbox.checked = true
             targetQty.dataset.precio = selectedOption.dataset.precio
             targetQty.id = `qty${selectedOption.value}`
             targetQty.name = `qty${selectedOption.value}`
@@ -363,10 +324,49 @@ function renderProductos(data) {
             }
             targetQty.innerHTML = `<option value=""></option>${formatQty}`
             updateTotal()
+            sincronizarProducto(selectedOption.value)
         });
     });
 
 }
+
+function sincronizarProducto(productoId) {
+    const checkbox = document.getElementById(productoId);
+    const cantidadSelect = document.getElementById(`qty${productoId}`);
+
+    // Si se marca el checkbox, seleccionar "1 caja" en el desplegable
+    if (checkbox.checked) {
+        cantidadSelect.value = 1;
+    } else {
+        // Si se desmarca el checkbox, deseleccionar el desplegable
+        cantidadSelect.value = "";
+    }
+    updateTotal()
+}
+
+function splitDates(dates) {
+    const dateOptions = {
+        weekday: "long",
+        day: "2-digit",
+        month: "long"
+    }
+
+    const timeOptions = {
+        timeStyle: "short",
+        hour12: true
+    }
+    return {
+        inicio: {
+            hora: new Intl.DateTimeFormat("es", timeOptions).format(new Date(dates.entrega)),
+            fecha: new Intl.DateTimeFormat("es", dateOptions).format(new Date(dates.entrega))
+        },
+        fin: {
+            hora: new Intl.DateTimeFormat("es", timeOptions).format(new Date(dates.fin_entrega)),
+            fecha: new Intl.DateTimeFormat("es", dateOptions).format(new Date(dates.fin_entrega))
+        }
+    }
+}
+
 
 
 function switchBtn(status) {
