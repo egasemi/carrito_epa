@@ -522,5 +522,6 @@ function updateCart() {
         carrito.classList.add('d-none')
         carrito.innerHTML = ""
     }
+    ajustarAltura()
 }
 
