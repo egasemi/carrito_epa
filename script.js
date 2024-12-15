@@ -75,6 +75,7 @@ function ajustarAltura() {
 
 
 window.addEventListener("resize", ajustarAltura);
+document.addEventListener("resize", ajustarAltura)
 
 // Llama a ajustarAltura después de que el contenido esté listo
 
