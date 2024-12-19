@@ -532,7 +532,7 @@ function updateCart() {
 
 entrega.addEventListener('change', () => {
     const horariosInput = document.getElementById('horarios')
-    if (entrega.value === "D6 - San Martín 1168") {
+    if (entrega.value === "Delivery") {
         direccion.parentElement.classList.remove('d-none')
         direccion.setAttribute('required', true)
         horariosInput.innerHTML = `
