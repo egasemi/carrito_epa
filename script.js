@@ -86,9 +86,13 @@ const btnSubmit = document.getElementById('btnSubmit');
 const btnText = document.getElementById('btnText');
 const no_ciclos = document.getElementById('no-ciclos');
 const retiroElement = document.getElementById('retiro');
+const direccion = document.getElementById('direccion')
+const entrega = document.getElementById('entrega')
+const btnSpinner = document.getElementById('btnSpinner')
 var grupos = {}
 var total = 0
 var pedido = []
+var infoCiclo
 
 const variantProductos = []
 
@@ -108,6 +112,7 @@ load()
 function renderProductos(data) {
     const { ciclos, productos } = data
     if (ciclos[0]) {
+        infoCiclo = ciclos[0]
         const productosDiv = document.getElementById('productos');
         productosDiv.replaceChildren()
 
@@ -524,4 +529,24 @@ function updateCart() {
     }
     ajustarAltura()
 }
+
+entrega.addEventListener('change', () => {
+    const horariosInput = document.getElementById('horarios')
+    if (entrega.value === "D6 - San Martín 1168") {
+        direccion.parentElement.classList.remove('d-none')
+        direccion.setAttribute('required', true)
+        horariosInput.innerHTML = `
+            <option value="23/12 10 a 15">23/12 10 a 15</option>
+            <option value="23/12 16 a 20">23/12 16 a 20</option>
+        `
+    } else {
+        direccion.parentElement.classList.add('d-none')
+        direccion.removeAttribute('required')
+        const puntos = infoCiclo.horarios.split(",")
+        horariosInput.innerHTML = `<option disabled ${puntos.length === 1 ? '' : 'selected'}>Elegir...</option>`
+        puntos.forEach(p => {
+            horariosInput.innerHTML += `<option value='${p}' ${puntos.length === 1 ? 'selected' : ''}>${p}</option>`
+        })
+    }
+})
 

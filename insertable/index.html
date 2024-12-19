@@ -59,7 +59,7 @@
         </div>
   
         <div class="form-floating mb-3">
-          <select class="form-select" id="forma-pago" name="pago" aria-label="Forma de pago">
+          <select class="form-select" id="forma-pago" name="pago" aria-label="Forma de pago" required>
             <option selected disabled>Elegir...</option>
           </select>
           <label for="floatingSelect">Forma de pago</label>
@@ -69,6 +69,10 @@
             <option selected disabled>Elegir...</option>
           </select>
           <label for="floatingSelect">Punto de entrega</label>
+        </div>
+        <div class="form-floating mb-3 d-none">
+            <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección">
+            <label for="direccion">Dirección</label>
         </div>
         <div class="form-floating mb-3">
           <select class="form-select" id="horarios" name="horarios" aria-label="Horarios" required>
