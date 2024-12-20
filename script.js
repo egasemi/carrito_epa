@@ -455,7 +455,8 @@ function send(form) {
             horarios: info.horarios,
             nodo: info.nodo,
             pago: info.pago,
-            procedencia: info.procedencia
+            procedencia: info.procedencia,
+            direccion: info.direccion
         }
 
         var checked_inputs = document.querySelectorAll('.check-productos:checked')
