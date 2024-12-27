@@ -1,9 +1,10 @@
-(() => {
+/* (() => {
     'use strict'
 
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
     const forms = document.querySelectorAll('.needs-validation')
-
+    const checkboxes = document.querySelectorAll('check-products')
+    console.log(checkboxes)
     // Loop over them and prevent submission
     Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
@@ -15,8 +16,30 @@
             send(form)
         }, false)
     })
+})() */
+
+(() => {
+    const form = document.getElementById('pedido')
+
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        const checked_inputs = document.querySelectorAll('.check-productos:checked')
+
+        if (!form.checkValidity() || checked_inputs.length === 0) {
+            if (checked_inputs.length === 0) {
+                showAlert('Seleccioná por lo menos un producto', 'danger')
+            } else if (!form.checkValidity()) {
+                showAlert('Completá todos los datos para que podamos registrar el pedido', 'danger')
+            }
+            event.stopPropagation();
+        } else {
+            send(form)
+        }
+        form.classList.add('was-validated')
+    })
 })()
-document.getElementById('celular').addEventListener('input', function (event) {
+
+document.getElementById('celular').addEventListener('keyup', function (event) {
     this.value = this.value.replace(/[^0-9]/g, '');
 });
 
@@ -89,6 +112,10 @@ const retiroElement = document.getElementById('retiro');
 const direccion = document.getElementById('direccion')
 const entrega = document.getElementById('entrega')
 const btnSpinner = document.getElementById('btnSpinner')
+const horariosDiv = document.getElementById('horariosDiv')
+const pagoDiv = document.getElementById('pagoDiv')
+const horariosInput = document.getElementById('horarios')
+const pagoInput = document.getElementById('pago')
 var grupos = {}
 var total = 0
 var pedido = []
@@ -222,37 +249,14 @@ function renderProductos(data) {
 
         const cicloInput = document.getElementById('ciclo');
         cicloInput.value = ciclos[0].id
-        const formaPagoInput = document.getElementById('forma-pago');
-        formaPagoInput.replaceChildren()
-        var pagos = ciclos[0].pago.split(",")
-        formaPagoInput.innerHTML = `<option disabled ${pagos.length === 1 ? '' : 'selected'}>Elegir...</option>`
-        pagos.forEach(p => {
-            formaPagoInput.innerHTML += `<option value='${p}' ${pagos.length === 1 ? 'selected' : ''}>${p}</option>`
+
+        const puntos = ciclos[0].puntos
+        entrega.innerHTML = `<option disabled ${puntos.length === 1 ? '' : 'selected'}>Elegir...</option>`
+        puntos.forEach(p => {
+            entrega.innerHTML += `<option data-horarios='${p.horarios}' data-pago='${p.pago}' value='${p.nombre}' ${puntos.length === 1 ? 'selected' : ''}>${p.nombre}</option>`
         })
 
-        if (ciclos[0]?.direccion?.length > 1) {
-            const entregaInput = document.getElementById("entrega")
-            entregaInput.replaceChildren()
-            const puntos = ciclos[0].direccion.split(",")
-            entregaInput.innerHTML = `<option disabled ${puntos.length === 1 ? '' : 'selected'}>Elegir...</option>`
-            puntos.forEach(p => {
-                entregaInput.innerHTML += `<option value='${p}' ${puntos.length === 1 ? 'selected' : ''}>${p}</option>`
-            })
-
-            entregaInput.style.display = ""
-        }
-
-        if (ciclos[0]?.horarios?.length > 1) {
-            const horariosInput = document.getElementById("horarios")
-            horariosInput.replaceChildren()
-            const puntos = ciclos[0].horarios.split(",")
-            horariosInput.innerHTML = `<option disabled ${puntos.length === 1 ? '' : 'selected'}>Elegir...</option>`
-            puntos.forEach(p => {
-                horariosInput.innerHTML += `<option value='${p}' ${puntos.length === 1 ? 'selected' : ''}>${p}</option>`
-            })
-
-            horariosInput.style.display = ""
-        }
+        entrega.style.display = ""
 
         if (ciclos[0]?.info?.length > 1) {
             var infoElement = document.getElementById("info_entrega")
@@ -406,13 +410,19 @@ function updateTotal() {
     });
 }
 
-function successHandler(res) {
+function successHandler(resString, form) {
+    const res = JSON.parse(resString)
     if (res.status === "success") {
         pedidoElem.style.display = 'none'
         spinner.classList.remove('d-none')
-        total = 0
+        horariosDiv.classList.add('d-none')
+        pagoDiv.classList.add('d-none')
+        pedido.total = 0
         pedido = []
         showAlert(res.msg, res.status)
+        form.classList.remove('was-validated')
+        form.reset()
+        updateCart()
     } else if (res.status === "danger") {
         showAlert(res.msg, res.status)
         switchBtn("active")
@@ -434,72 +444,57 @@ function showAlert(text, color) {
 
 function send(form) {
     switchBtn("loading")
-    if (form.checkValidity()) {
-        event.preventDefault();
-
-        let data = {
-            pedido: [],
-            total: 0,
-            info: {}
-        }
-
-        var info = Array.from(new FormData(form).entries()).reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {});
-
-        data.info = {
-            dni: info.dni,
-            nombre: info.nombre,
-            apellido: info.apellido,
-            celular: info.celular,
-            entrega: info.entrega,
-            ciclo: info.ciclo,
-            horarios: info.horarios,
-            nodo: info.nodo,
-            pago: info.pago,
-            procedencia: info.procedencia,
-            direccion: info.direccion
-        }
-
-        var checked_inputs = document.querySelectorAll('.check-productos:checked')
-
-        checked_inputs.forEach(input => {
-            var qty = document.getElementById("qty" + input.id)
-            const nombre = document.getElementById(`titulo-${input.dataset.grupoCheckbox}`).dataset.titulo
-            var subtotal = parseInt(qty.dataset.precio) * parseInt(qty.value)
-            data.pedido.push({ producto: input.value, cantidad: qty.value, subtotal, nombre })
-            data.total += subtotal
-        })
-
-        if (data.pedido.length > 0) {
-            const myHeaders = new Headers();
-            myHeaders.append("Content-Type", "text/plain");
-
-            const raw = JSON.stringify(data);
-
-            const requestOptions = {
-                method: "POST",
-                headers: myHeaders,
-                body: raw,
-                redirect: "follow"
-            };
-
-            fetch("https://script.google.com/macros/s/AKfycbyWidO-mbdC060FypfS1KOMT6-pG9KBpDZb4pNQbaWLQekOrkCbyxAnDYL2tfZm0i67/exec", requestOptions)
-                .then((response) => response.text())
-                .then((res) => {
-                    successHandler(res)
-                    form.reset()
-                })
-                .catch((error) => console.error(error));
-
-        } else {
-            var check = document.querySelector(".check-productos")
-            check.classList.add("is-invalid")
-            switchBtn("active")
-        }
-
-        form.classList.remove("was-validated")
-    } else {
-        switchBtn("active")
+    let data = {
+        pedido: [],
+        total: 0,
+        info: {}
     }
+
+    var info = Array.from(new FormData(form).entries()).reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {});
+
+    data.info = {
+        dni: info.dni,
+        nombre: info.nombre,
+        apellido: info.apellido,
+        celular: info.celular,
+        entrega: info.entrega,
+        ciclo: info.ciclo,
+        horarios: info.horarios,
+        nodo: info.nodo,
+        pago: info.pago,
+        procedencia: info.procedencia,
+        direccion: info.direccion
+    }
+
+    var checked_inputs = document.querySelectorAll('.check-productos:checked')
+
+    checked_inputs.forEach(input => {
+        var qty = document.getElementById("qty" + input.id)
+        const nombre = document.getElementById(`titulo-${input.dataset.grupoCheckbox}`).dataset.titulo
+        var subtotal = parseInt(qty.dataset.precio) * parseInt(qty.value)
+        data.pedido.push({ producto: input.value, cantidad: qty.value, subtotal, nombre })
+        data.total += subtotal
+    })
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "text/plain");
+
+    const raw = JSON.stringify(data);
+
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow"
+    };
+
+    fetch("https://script.google.com/macros/s/AKfycbyWidO-mbdC060FypfS1KOMT6-pG9KBpDZb4pNQbaWLQekOrkCbyxAnDYL2tfZm0i67/exec", requestOptions)
+        .then((response) => response.text())
+        .then((res) => {
+            const form = document.getElementById('pedido')
+            successHandler(res, form)
+        })
+        .catch((error) => console.error(error, "error en fetch"));
 }
 
 function updateCart() {
@@ -531,23 +526,26 @@ function updateCart() {
     ajustarAltura()
 }
 
-entrega.addEventListener('change', () => {
-    const horariosInput = document.getElementById('horarios')
-    if (entrega.value === "Delivery") {
-        direccion.parentElement.classList.remove('d-none')
-        direccion.setAttribute('required', true)
-        horariosInput.innerHTML = `
-            <option value="23/12 10 a 15">23/12 10 a 15</option>
-            <option value="23/12 16 a 20">23/12 16 a 20</option>
-        `
-    } else {
-        direccion.parentElement.classList.add('d-none')
-        direccion.removeAttribute('required')
-        const puntos = infoCiclo.horarios.split(",")
-        horariosInput.innerHTML = `<option disabled ${puntos.length === 1 ? '' : 'selected'}>Elegir...</option>`
-        puntos.forEach(p => {
-            horariosInput.innerHTML += `<option value='${p}' ${puntos.length === 1 ? 'selected' : ''}>${p}</option>`
+entrega.addEventListener('change', (el) => {
+
+    const selectedOption = el.target.selectedOptions[0]
+    horariosInput.replaceChildren()
+    pagoInput.replaceChildren()
+    if (selectedOption) {
+        selectedOption.dataset.horarios.split(",").forEach(horario => {
+            horariosInput.innerHTML += `<option value='${horario}'>${horario}</option>`
         })
+        horariosDiv.classList.remove('d-none')
+        horariosInput.removeAttribute('disabled')
+
+        selectedOption.dataset.pago.split(',').forEach(pago => {
+            pagoInput.innerHTML += `<option value='${pago}'>${pago}</option>`
+        })
+        pagoDiv.classList.remove('d-none')
+        pagoInput.removeAttribute('disabled')
+    } else {
+        horariosDiv.classList.add('d-none')
+        pagoDiv.classList.add('d-none')
     }
 })
 

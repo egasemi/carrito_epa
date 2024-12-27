@@ -57,16 +57,9 @@
           <input type="text" class="form-control" id="procedencia" name="procedencia" placeholder="¿Cómo te enteraste?" required>
           <label for="procedencia">¿Cómo te enteraste?</label>
         </div>
-  
-        <div class="form-floating mb-3">
-          <select class="form-select" id="forma-pago" name="pago" aria-label="Forma de pago" required>
-            <option selected disabled>Elegir...</option>
-          </select>
-          <label for="floatingSelect">Forma de pago</label>
-        </div>
         <div class="form-floating mb-3">
           <select class="form-select" id="entrega" name="entrega" aria-label="Punto de entrega" required>
-            <option selected disabled>Elegir...</option>
+            <option selected>Elegir...</option>
           </select>
           <label for="floatingSelect">Punto de entrega</label>
         </div>
@@ -74,11 +67,15 @@
             <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección">
             <label for="direccion">Dirección</label>
         </div>
-        <div class="form-floating mb-3">
-          <select class="form-select" id="horarios" name="horarios" aria-label="Horarios" required>
-            <option selected disabled>Elegir...</option>
+        <div class="form-floating mb-3 d-none" id="horariosDiv">
+          <select class="form-select" id="horarios" name="horarios" aria-label="Horarios" required disabled>
           </select>
           <label for="floatingSelect">Horarios</label>
+        </div>
+        <div class="form-floating mb-3 d-none" id="pagoDiv">
+          <select class="form-select" id="pago" name="pago" aria-label="Forma de pago" required disabled>
+          </select>
+          <label for="floatingSelect">Forma de pago</label>
         </div>
         <div id="retiro" class="mb-3" style="display: none;">
           <div class="card mb-3 p-2">
