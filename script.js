@@ -432,7 +432,7 @@ function successHandler(resString, form) {
 
 function showAlert(text, color) {
     var alert = document.getElementById("alert")
-    alert.classList.add("alert", "position-fixed", "top-50", "start-50", "translate-middle", "z-3", "alert-" + color)
+    alert.classList.add("alert", "ms-3", "p-2", "position-absolute", "start-0", "text-center", "w-50", "alert-" + color)
     alert.innerHTML = text;
     alert.classList.remove('d-none')
     alert.focus()
