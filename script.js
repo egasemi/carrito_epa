@@ -543,6 +543,7 @@ entrega.addEventListener('change', (el) => {
         })
         pagoDiv.classList.remove('d-none')
         pagoInput.removeAttribute('disabled')
+        ajustarAltura()
     } else {
         horariosDiv.classList.add('d-none')
         pagoDiv.classList.add('d-none')
