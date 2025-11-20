@@ -120,12 +120,18 @@ var grupos = {}
 var total = 0
 var pedido = []
 var infoCiclo
+const url = "https://script.google.com/macros/s/AKfycbyWidO-mbdC060FypfS1KOMT6-pG9KBpDZb4pNQbaWLQekOrkCbyxAnDYL2tfZm0i67/exec"
+
+const nodoInput = document.getElementById('nodo');
+const params = new URLSearchParams(window.location.search)
+nodoInput.value = params.get("nodo")
+nodo = params.get("nodo") || "cf"
 
 const variantProductos = []
 
 function load() {
     updateTotal()
-    fetch("https://script.google.com/macros/s/AKfycbyWidO-mbdC060FypfS1KOMT6-pG9KBpDZb4pNQbaWLQekOrkCbyxAnDYL2tfZm0i67/exec")
+    fetch(`${url}?nodo=${nodo}`)
         .then(response => response.json())
         .then(res => {
             renderProductos(res.data)
@@ -266,12 +272,12 @@ function renderProductos(data) {
             retiroElement.style.display = ''
         }
 
-        if (ciclos[0]?.entrega) {
+/*         if (ciclos[0]?.entrega) {
             var horarios_retiroElement = document.getElementById("horarios_retiro")
             const { inicio, fin } = splitDates(ciclos[0])
             horarios_retiroElement.innerHTML = `Retirá tu pedido el <b>${inicio.fecha}</b> desde las <b>${inicio.hora}</b> hasta las <b>${fin.hora}`
             retiroElement.style.display = ''
-        }
+        } */
 
         // Agregar eventos de cambio a los checkbox
         const productosElement = document.getElementById('productos');
@@ -443,11 +449,13 @@ function showAlert(text, color) {
 
 
 function send(form) {
+    const carrito = document.getElementById('carrito')
     switchBtn("loading")
     let data = {
         pedido: [],
         total: 0,
-        info: {}
+        info: {},
+        carrito: carrito.innerHTML
     }
 
     var info = Array.from(new FormData(form).entries()).reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {});
@@ -462,7 +470,8 @@ function send(form) {
         horarios: info.horarios,
         nodo: info.nodo,
         pago: info.pago,
-        procedencia: info.procedencia,
+        //procedencia: info.procedencia,
+        email: info.email,
         direccion: info.direccion
     }
 
@@ -472,7 +481,7 @@ function send(form) {
         var qty = document.getElementById("qty" + input.id)
         const nombre = document.getElementById(`titulo-${input.dataset.grupoCheckbox}`).dataset.titulo
         var subtotal = parseInt(qty.dataset.precio) * parseInt(qty.value)
-        data.pedido.push({ producto: input.value, cantidad: qty.value, subtotal, nombre })
+        data.pedido.push({ producto: input.value, cantidad: qty.value, subtotal, nombre, precio: parseInt(qty.dataset.precio) })
         data.total += subtotal
     })
 
@@ -488,7 +497,7 @@ function send(form) {
         redirect: "follow"
     };
 
-    fetch("https://script.google.com/macros/s/AKfycbyWidO-mbdC060FypfS1KOMT6-pG9KBpDZb4pNQbaWLQekOrkCbyxAnDYL2tfZm0i67/exec", requestOptions)
+    fetch(`${url}?nodo=${nodo}`, requestOptions)
         .then((response) => response.text())
         .then((res) => {
             const form = document.getElementById('pedido')

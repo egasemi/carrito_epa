@@ -16,9 +16,10 @@
     <div class="alert alert-success position-fixed top-50 start-50 translate-middle z-3" role="alert" style="display:none;" id="alert"></div>
   
     <div>
-      <div class="d-flex justify-content-center" id="spinner">
-        <div class="spinner-border" role="status">
-          <span class="visually-hidden">Cargando...</span>
+      <div class="d-flex justify-content-center mt-5" id="spinner">
+        <div class="spinner-grow" role="status" style="color: transparent;">
+            <img src="/img/logo_grande.png" alt="logo epa girando" class="image-fluid" height="40px">
+            <span class="visually-hidden">Cargando...</span>
         </div>
       </div>
   
@@ -56,44 +57,53 @@
           <label for="celular">Celular</label>
         </div>
   
-        <div class="form-floating mb-3">
+<!--         <div class="form-floating mb-3">
           <input type="text" class="form-control" id="procedencia" name="procedencia" placeholder="¿Cómo te enteraste?" required>
           <label for="procedencia">¿Cómo te enteraste?</label>
-        </div>
-  
+        </div> -->
         <div class="form-floating mb-3">
-          <select class="form-select" id="forma-pago" name="pago" aria-label="Forma de pago">
-            <option selected disabled>Elegir...</option>
-          </select>
-          <label for="floatingSelect">Forma de pago</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese su correo electrónico" required>
+          <label for="email">Email</label>
         </div>
         <div class="form-floating mb-3">
           <select class="form-select" id="entrega" name="entrega" aria-label="Punto de entrega" required>
-            <option selected disabled>Elegir...</option>
+            <option selected>Elegir...</option>
           </select>
           <label for="floatingSelect">Punto de entrega</label>
         </div>
-        <div class="form-floating mb-3">
-          <select class="form-select" id="horarios" name="horarios" aria-label="Horarios" required>
-            <option selected disabled>Elegir...</option>
+        <div class="form-floating mb-3 d-none">
+            <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección">
+            <label for="direccion">Dirección</label>
+        </div>
+        <div class="form-floating mb-3 d-none" id="horariosDiv">
+          <select class="form-select" id="horarios" name="horarios" aria-label="Horarios" required disabled>
           </select>
           <label for="floatingSelect">Horarios</label>
+        </div>
+        <div class="form-floating mb-3 d-none" id="pagoDiv">
+          <select class="form-select" id="pago" name="pago" aria-label="Forma de pago" required disabled>
+          </select>
+          <label for="floatingSelect">Forma de pago</label>
         </div>
         <div id="retiro" class="mb-3" style="display: none;">
           <div class="card mb-3 p-2">
             <div class="card-body">
               <h4 id="total" class="text-success"></h4>
-              <h5 class="card-title">Información adicional</h5>
+              <!-- <h5 class="card-title">Información adicional</h5> -->
               <p class="card-text" id="horarios_retiro"></p>
               <p class="card-text" id="info_entrega"></p>
             </div>
           </div>
+          <div class="card mb-3 p-2 d-none" id="carrito">
+          </div>
         </div>
-  
-        <button type="submit" class="btn btn-primary btn-lg mb-5" id="btnSubmit">
-            <span class="spinner-border spinner-border-sm" id="btnSpinner" aria-hidden="true" style="display: none;"></span>
-            <span role="status" id="btnText">Enviar</span>
-        </button>
+        <div class="d-flex justify-content-end align-items-top mb-5">
+          <div class="alert alert-success d-none" role="alert" id="alert"></div>
+          <button type="submit" class="btn btn-primary btn-lg ms-3" id="btnSubmit">
+              <span class="spinner-border spinner-border-sm" id="btnSpinner" aria-hidden="true" style="display: none;"></span>
+              <span role="status" id="btnText">Confirmar pedido</span>
+          </button>
+        </div>
       </form>
       <h3 id="no-ciclos" class="text-danger d-none">No hay ciclos activos</h3>
     </div>
