@@ -418,6 +418,7 @@ function updateTotal() {
 
 function successHandler(resString, form) {
     const res = JSON.parse(resString)
+    console.log(res)
     if (res.status === "success") {
         pedidoElem.style.display = 'none'
         spinner.classList.remove('d-none')
@@ -501,6 +502,10 @@ function send(form) {
         .then((response) => response.text())
         .then((res) => {
             const form = document.getElementById('pedido')
+            console.log('respuesta GAS:', res);
+            if (res.debug) {
+                console.log('DEBUG GAS:\n' + res.debug.join('\n'));
+              }
             successHandler(res, form)
         })
         .catch((error) => console.error(error, "error en fetch"));
