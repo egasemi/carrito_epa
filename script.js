@@ -257,9 +257,9 @@ function renderProductos(data) {
         cicloInput.value = ciclos[0].id
 
         const puntos = ciclos[0].puntos
-        entrega.innerHTML = `<option disabled ${puntos.length === 1 ? '' : 'selected'}>Elegir...</option>`
+        entrega.innerHTML = `<option disabled hidden selected>Elegir...</option>`
         puntos.forEach(p => {
-            entrega.innerHTML += `<option data-horarios='${p.horarios}' data-pago='${p.pago}' value='${p.nombre}' ${puntos.length === 1 ? 'selected' : ''}>${p.nombre}</option>`
+            entrega.innerHTML += `<option data-horarios='${p.horarios}' data-pago='${p.pago}' value='${p.nombre}'>${p.nombre}</option>`
         })
 
         entrega.style.display = ""
@@ -450,13 +450,13 @@ function showAlert(text, color) {
 
 
 function send(form) {
-    const carrito = document.getElementById('carrito')
+    const info_entrega = document.getElementById('info_entrega')
     switchBtn("loading")
     let data = {
         pedido: [],
         total: 0,
         info: {},
-        carrito: carrito.innerHTML
+        info_entrega: info_entrega.innerHTML
     }
 
     var info = Array.from(new FormData(form).entries()).reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {});
