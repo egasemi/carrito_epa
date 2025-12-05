@@ -120,7 +120,7 @@ var grupos = {}
 var total = 0
 var pedido = []
 var infoCiclo
-const url = "https://script.google.com/macros/s/AKfycbzX_aah1jzTdBLBoR6_ihFnG-7P6ENmH4XAE9dJiRMOmQCx4zc02zIxz0yaaph7ES6T/exec"
+const url = "https://script.google.com/macros/s/AKfycbzdHBGe2JNzoqSlnwcp8Lcw93c7YmVac5dIYkKkdF4AZcJONv-S2ByiI60baU1EMFq6GA/exec"
 
 const nodoInput = document.getElementById('nodo');
 const params = new URLSearchParams(window.location.search)
