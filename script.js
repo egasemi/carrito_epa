@@ -226,7 +226,8 @@ function renderProductos(data) {
           </div>
           <div class="row">
             <div class="img-container mb-3">
-                <img src="/img/fotos_productos/${producto.id_titulo}.webp" 
+                <img src="/img/fotos_productos/${producto.id_titulo+producto.id}.webp" 
+                    id="img-${grupoId}"
                     alt="${producto.titulo}" 
                     class="img-fluid rounded-3"
                     onerror="this.parentNode.style.display='none';">
@@ -334,6 +335,7 @@ function renderProductos(data) {
             targetQty.name = `qty${selectedOption.value}`
             document.getElementById(`precio-${grupoId}`).innerText = `$${selectedOption.dataset.precio}`;
             document.getElementById(`descripcion-${grupoId}`).innerHTML = descripcionList;
+            document.getElementById(`img-${grupoId}`).src = `/img/fotos_productos/${grupoId + selectedOption.value}.webp`
             var formatQty = ''
             var disponibles = parseInt(selectedOption.dataset.disponibles)
             var limite = parseInt(selectedOption.dataset.limite)
