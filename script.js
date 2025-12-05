@@ -226,7 +226,7 @@ function renderProductos(data) {
           </div>
           <div class="row">
             <div class="img-container mb-3">
-                <img src="/img/fotos_productos/${producto.id_titulo+producto.id}.webp" 
+                <img src="/img/fotos_productos/${producto.id}.webp" 
                     id="img-${grupoId}"
                     alt="${producto.titulo}" 
                     class="img-fluid rounded-3"
@@ -335,7 +335,7 @@ function renderProductos(data) {
             targetQty.name = `qty${selectedOption.value}`
             document.getElementById(`precio-${grupoId}`).innerText = `$${selectedOption.dataset.precio}`;
             document.getElementById(`descripcion-${grupoId}`).innerHTML = descripcionList;
-            document.getElementById(`img-${grupoId}`).src = `/img/fotos_productos/${grupoId + selectedOption.value}.webp`
+            document.getElementById(`img-${grupoId}`).src = `/img/fotos_productos/${selectedOption.value}.webp`
             var formatQty = ''
             var disponibles = parseInt(selectedOption.dataset.disponibles)
             var limite = parseInt(selectedOption.dataset.limite)
@@ -466,13 +466,13 @@ function send(form) {
         nombre: info.nombre,
         apellido: info.apellido,
         celular: info.celular,
-        entrega: info.entrega,
-        ciclo: info.ciclo,
-        horarios: info.horarios,
-        nodo: info.nodo,
-        pago: info.pago,
         procedencia: info.procedencia,
         email: info.email,
+        pago: info.pago,
+        nodo: info.nodo,
+        ciclo: info.ciclo,
+        entrega: info.entrega,
+        horarios: info.horarios,
         direccion: info.direccion
     }
 
