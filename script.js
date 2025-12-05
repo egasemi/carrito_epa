@@ -388,8 +388,6 @@ function splitDates(dates) {
     }
 }
 
-
-
 function switchBtn(status) {
     if (status === "loading") {
         btnSubmit.setAttribute("disabled", true)
@@ -471,7 +469,7 @@ function send(form) {
         horarios: info.horarios,
         nodo: info.nodo,
         pago: info.pago,
-        //procedencia: info.procedencia,
+        procedencia: info.procedencia,
         email: info.email,
         direccion: info.direccion
     }
