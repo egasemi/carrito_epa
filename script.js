@@ -226,7 +226,7 @@ function renderProductos(data) {
           </div>
           <div class="row">
             <div class="img-container mb-3">
-                <img src="/img/fotos_productos/${producto.id_titulo}.webp" 
+                <img src="/img/fotos_productos/${producto.id}.webp" 
                     alt="${producto.titulo}" 
                     class="img-fluid rounded-3"
                     onerror="this.parentNode.style.display='none';">
